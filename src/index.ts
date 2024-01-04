@@ -1,9 +1,16 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
+import { html } from 'hono/html';
+import { Env as BaseEnv } from "hono/dist/types/types";
+import { index } from './pages/index';
+import { posts } from './pages/posts';
 
-const app = new Hono()
+export type Env = BaseEnv & {
+  DB: D1Database;
+};
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+const app = new Hono<{ Bindings: Env }>();
 
-export default app
+app.get('/', (c) => index(c));
+app.get('/posts/:date', (c) => posts(c));
+
+export default app;
